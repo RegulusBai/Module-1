@@ -191,7 +191,8 @@ class History:
             list of numbers : a derivative with respect to `inputs`
         """
         # TODO: Implement for Task 1.4.
-        raise NotImplementedError('Need to implement for Task 1.4')
+        return self.last_fn.chain_rule(self.ctx,self.inputs,d_output)
+        # raise NotImplementedError('Need to implement for Task 1.4')
 
 
 class FunctionBase:
@@ -274,7 +275,15 @@ class FunctionBase:
         # Tip: Note when implementing this function that
         # cls.backward may return either a value or a tuple.
         # TODO: Implement for Task 1.3.
-        raise NotImplementedError('Need to implement for Task 1.3')
+        res = []
+        ders = cls.backward(ctx,d_output)
+        ders= wrap_tuple(ders)
+        ders = zip(inputs,ders)
+        for val,de in ders:
+            if not is_constant(val):
+                res.append((val,de))
+        return res
+        # raise NotImplementedError('Need to implement for Task 1.3')
 
 
 # Algorithms for backpropagation
@@ -296,7 +305,15 @@ def topological_sort(variable):
                             starting from the right.
     """
     # TODO: Implement for Task 1.4.
-    raise NotImplementedError('Need to implement for Task 1.4')
+    def visit(v,visited):
+        if not v.is_leaf():
+            for ip in v.history.inputs:
+                if not is_constant(ip) and ip.unique_id not in [i[0] for i in visited]:
+                    visited = visit(ip,visited)
+        visited = [(v.unique_id,v)]+visited
+        return visited
+    return visit(variable,[])
+    # raise NotImplementedError('Need to implement for Task 1.4')
 
 
 def backpropagate(variable, deriv):
@@ -313,4 +330,16 @@ def backpropagate(variable, deriv):
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
     # TODO: Implement for Task 1.4.
-    raise NotImplementedError('Need to implement for Task 1.4')
+    vals = [i[1] for i in topological_sort(variable)]
+    derivs = dict()
+    derivs[variable.unique_id]=  deriv
+    for val in vals:
+        if val.is_leaf():
+            val.accumulate_derivative(derivs[val.unique_id])
+        else:
+            new_de = val.history.backprop_step(derivs[val.unique_id])
+            for v,de in new_de:
+                if v.unique_id not in derivs:
+                    derivs[v.unique_id] = 0.0
+                derivs[v.unique_id] += de
+    # raise NotImplementedError('Need to implement for Task 1.4')

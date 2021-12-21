@@ -21,11 +21,23 @@ class Module:
 
     def train(self):
         "Set the mode of this module and all descendent modules to `train`."
-        raise NotImplementedError('Need to include this file from past assignment.')
+        # TODO: Implement for Task 0.4.
+        self.training = True
+        if self.modules():
+            for module in self.modules():
+                module.train()
+        return
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def eval(self):
         "Set the mode of this module and all descendent modules to `eval`."
-        raise NotImplementedError('Need to include this file from past assignment.')
+        # TODO: Implement for Task 0.4.
+        self.training = False
+        if self.modules():
+            for module in self.modules():
+                module.eval()
+        return
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def named_parameters(self):
         """
@@ -35,11 +47,24 @@ class Module:
         Returns:
             list of pairs: Contains the name and :class:`Parameter` of each ancestor parameter.
         """
-        raise NotImplementedError('Need to include this file from past assignment.')
+        # TODO: Implement for Task 0.4.
+
+        named_param = [[name, param] for name, param in self._parameters.items()]
+        if self.modules():
+            for n, m in self.__dict__["_modules"].items():
+                p_d = m.named_parameters()
+                for p in p_d:
+                    p[0] = "{}.{}".format(n, p[0])
+                named_param += p_d
+        return named_param
+
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def parameters(self):
         "Enumerate over all the parameters of this module and its descendents."
-        raise NotImplementedError('Need to include this file from past assignment.')
+        # TODO: Implement for Task 0.4.
+        return [named_param[1] for named_param in self.named_parameters()]
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def add_parameter(self, k, v):
         """
