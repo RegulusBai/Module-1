@@ -25,9 +25,9 @@ def central_difference(f, *vals, arg=0, epsilon=1e-6):
     # TODO: Implement for Task 1.1.
     vec = list(vals)
     y = f(*vec)
-    vec[arg] +=epsilon
-    return  (f(*vec)-y)/epsilon
-   
+    vec[arg] += epsilon
+    return (f(*vec) - y) / epsilon
+
     # raise NotImplementedError('Need to implement for Task 1.1')
 
 
@@ -65,7 +65,7 @@ class Scalar(Variable):
 
     def __add__(self, b):
         # TODO: Implement for Task 1.2.
-        return Add.apply(self,b)
+        return Add.apply(self, b)
         # raise NotImplementedError('Need to implement for Task 1.2')
 
     def __bool__(self):
@@ -73,22 +73,22 @@ class Scalar(Variable):
 
     def __lt__(self, b):
         # TODO: Implement for Task 1.2.
-        return LT.apply(self,b)
+        return LT.apply(self, b)
         # raise NotImplementedError('Need to implement for Task 1.2')
 
     def __gt__(self, b):
         # TODO: Implement for Task 1.2.
-        return LT.apply(b,self)
+        return LT.apply(b, self)
         # raise NotImplementedError('Need to implement for Task 1.2')
 
     def __eq__(self, b):
         # TODO: Implement for Task 1.2.
-        return EQ.apply(self,b)
+        return EQ.apply(self, b)
         # raise NotImplementedError('Need to implement for Task 1.2')
 
     def __sub__(self, b):
         # TODO: Implement for Task 1.2.
-        return Add.apply(self,-b)
+        return Add.apply(self, -b)
         # raise NotImplementedError('Need to implement for Task 1.2')
 
     def __neg__(self):
@@ -205,15 +205,15 @@ class Mul(ScalarFunction):
     @staticmethod
     def forward(ctx, a, b):
         # TODO: Implement for Task 1.2.
-        ctx.save_for_backward(a,b)
-        return a*b
+        ctx.save_for_backward(a, b)
+        return a * b
         # raise NotImplementedError('Need to implement for Task 1.2')
 
     @staticmethod
     def backward(ctx, d_output):
         # TODO: Implement for Task 1.4.
-        a,b = ctx.saved_values
-        return b*d_output,a*d_output
+        a, b = ctx.saved_values
+        return b * d_output, a * d_output
         # raise NotImplementedError('Need to implement for Task 1.4')
 
 
@@ -224,14 +224,14 @@ class Inv(ScalarFunction):
     def forward(ctx, a):
         # TODO: Implement for Task 1.2.
         ctx.save_for_backward(a)
-        return 1/a
+        return 1 / a
         # raise NotImplementedError('Need to implement for Task 1.2')
 
     @staticmethod
     def backward(ctx, d_output):
         # TODO: Implement for Task 1.4.
         a = ctx.saved_values
-        return operators.inv_back(a,d_output)
+        return operators.inv_back(a, d_output)
         # raise NotImplementedError('Need to implement for Task 1.4')
 
 
@@ -265,7 +265,7 @@ class Sigmoid(ScalarFunction):
     def backward(ctx, d_output):
         # TODO: Implement for Task 1.4.
         a = ctx.saved_values
-        return operators.sigmoid(a)*(1-operators.sigmoid(a))*d_output
+        return operators.sigmoid(a) * (1 - operators.sigmoid(a)) * d_output
         # raise NotImplementedError('Need to implement for Task 1.4')
 
 
@@ -275,7 +275,7 @@ class ReLU(ScalarFunction):
     @staticmethod
     def forward(ctx, a):
         # TODO: Implement for Task 1.2.
-        if a>0:
+        if a > 0:
             ctx.save_for_backward(True)
             return a
         ctx.save_for_backward(False)
@@ -304,8 +304,8 @@ class Exp(ScalarFunction):
     @staticmethod
     def backward(ctx, d_output):
         # TODO: Implement for Task 1.4.
-        a =  ctx.saved_values
-        return operators.exp(a)*d_output
+        a = ctx.saved_values
+        return operators.exp(a) * d_output
         # raise NotImplementedError('Need to implement for Task 1.4')
 
 
@@ -315,7 +315,7 @@ class LT(ScalarFunction):
     @staticmethod
     def forward(ctx, a, b):
         # TODO: Implement for Task 1.2.
-        if a<b:
+        if a < b:
             return 1.0
         return 0.0
         # raise NotImplementedError('Need to implement for Task 1.2')
@@ -333,7 +333,7 @@ class EQ(ScalarFunction):
     @staticmethod
     def forward(ctx, a, b):
         # TODO: Implement for Task 1.2.
-        if a==b:
+        if a == b:
             return 1.0
         return 0.0
         # raise NotImplementedError('Need to implement for Task 1.2')
